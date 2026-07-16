@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Firetrack.Views.LoginPage"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="#4E6B94">
+
+    <Grid Padding="30" VerticalOptions="Center">
+        <VerticalStackLayout Spacing="20">
+
+            <Label Text="Fire Track"
+                   FontSize="48"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   FontAttributes="Bold"/>
+
+            <Label Text="QR Inventory &amp; Asset Accountability"
+                   FontSize="16"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,30"/>
+
+            <Entry Placeholder="Username"
+                   Text="{Binding Username}"
+                   TextColor="White"
+                   BackgroundColor="Transparent"
+                   PlaceholderColor="LightGray"/>
+            <Entry Placeholder="Password"
+                   Text="{Binding Password}"
+                   IsPassword="True"
+                   TextColor="White"
+                   BackgroundColor="Transparent"
+                   PlaceholderColor="LightGray"/>
+
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   FontSize="14"/>
+
+            <Button Text="LOGIN"
+                    Command="{Binding LoginCommand}"
+                    BackgroundColor="#eec6e6"
+                    TextColor="#333"
+                    CornerRadius="20"
+                    HeightRequest="50"
+                    FontAttributes="Bold"/>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

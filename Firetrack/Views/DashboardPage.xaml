@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Firetrack.Views.DashboardPage"
+             Title="Dashboard"
+             Shell.TabBarIsVisible="True">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Label Text="Fire Track Dashboard"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"/>
+
+        <Label Text="{Binding WelcomeMessage}"
+               FontSize="18"
+               HorizontalOptions="Center"/>
+
+        <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="White" Padding="10" StrokeShape="RoundRectangle 10">
+            <VerticalStackLayout>
+                <Label Text="📦 Your Assigned Equipment" FontAttributes="Bold"/>
+                <CollectionView ItemsSource="{Binding MyEquipment}" HeightRequest="200">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*, Auto" Padding="5">
+                                <Label Text="{Binding Name}" Grid.Column="0" FontSize="14"/>
+                                <Label Text="{Binding Status}" Grid.Column="1" FontSize="12" 
+                               TextColor="{Binding Status, Converter={StaticResource StatusColorConverter}}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </Border>
+
+        <Button Text="Logout"
+                Command="{Binding LogoutCommand}"
+                BackgroundColor="Gray"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="45"/>
+
+        <Button Text="📷 Scan QR"
+                Command="{Binding GoToScannerCommand}"
+                BackgroundColor="#4E6B94"
+                TextColor="White"
+                CornerRadius="10" />
+
+        <Button Text="🔄 Transfer Equipment"
+        Command="{Binding GoToTransferCommand}"
+        BackgroundColor="#6B4E94"
+        TextColor="White"
+        CornerRadius="10" />
+        
+    </VerticalStackLayout>
+</ContentPage>

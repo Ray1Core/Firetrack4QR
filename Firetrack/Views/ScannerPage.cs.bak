@@ -1,0 +1,82 @@
+﻿using Firetrack.ViewModels;
+using ZXing.Net.Maui;
+using ZXing.Net.Maui.Controls;
+using System.Linq;
+
+namespace Firetrack.Views;
+
+public class ScannerPage : ContentPage
+{
+    private readonly ScannerViewModel _vm;
+    private readonly CameraView _cameraView;
+
+    public ScannerPage()
+    {
+        _vm = new ScannerViewModel();
+        BindingContext = _vm;
+
+        // Create the CameraView programmatically
+        _cameraView = new CameraView
+        {
+            IsTorchOn = false,
+            IsEnabled = true,
+            VerticalOptions = LayoutOptions.Fill,
+            HorizontalOptions = LayoutOptions.Fill
+        };
+
+        // !!! DISABLED: The event signature is not compatible with the current ZXing version.
+        // Will be re-enabled after testing with a stable scanner library.
+        // _cameraView.BarcodeDetected += OnBarcodeDetected;
+
+        // Overlay (optional)
+        var overlay = new VerticalStackLayout
+        {
+            VerticalOptions = LayoutOptions.Center,
+            HorizontalOptions = LayoutOptions.Center,
+            Children =
+            {
+                new Label
+                {
+                    Text = "Scanning...",
+                    TextColor = Colors.White,
+                    BackgroundColor = Color.FromArgb("#88000000"),
+                    Padding = 10
+                }
+            }
+        };
+
+        // Put it all in a Grid
+        var grid = new Grid();
+        grid.Children.Add(_cameraView);
+        grid.Children.Add(overlay);
+
+        Content = grid;
+        Title = "Scan QR Code";
+    }
+
+    // !!! DISABLED: BarcodeDetectedEventArgs is not available in the current package version.
+    // Will be re-enabled once the scanner library is stable.
+    //private void OnBarcodeDetected(object sender, BarcodeDetectedEventArgs e)
+    //{
+    //    // Get the first result (if any)
+    //    var result = e.Results?.FirstOrDefault();
+    //    if (result == null || string.IsNullOrEmpty(result.Value))
+    //        return;
+
+    //    if (_vm.ScanCommand.CanExecute(result))
+    //        _vm.ScanCommand.Execute(result);
+    //}
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _vm.ResumeScanning();
+        _cameraView.IsEnabled = true;
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _cameraView.IsEnabled = false;
+    }
+}
