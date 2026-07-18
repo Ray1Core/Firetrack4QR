@@ -10,6 +10,7 @@ namespace Firetrack.ViewModels
     {
         private string _welcomeMessage = string.Empty;
         private ObservableCollection<EquipmentModel> _myEquipment = new();
+        private bool _isAdmin;
 
         public string WelcomeMessage
         {
@@ -23,21 +24,37 @@ namespace Firetrack.ViewModels
             set { _myEquipment = value; OnPropertyChanged(); }
         }
 
-        // Navigation commands
+        public bool IsAdmin
+        {
+            get => _isAdmin;
+            set { _isAdmin = value; OnPropertyChanged(); }
+        }
+
+        public string UserRole => App.CurrentUser?.Role ?? "Guest";
+
+        // Navigation Commands
         public ICommand GoToScannerCommand { get; }
-        public ICommand GoToTransferCommand { get; }   // <-- NEW
+        public ICommand GoToGenerateCommand { get; }
+        public ICommand GoToTransferCommand { get; }
+        public ICommand GoToAddUserCommand { get; }
+        public ICommand GoToClearanceCommand { get; }
+        public ICommand ReportDamageCommand { get; }
         public ICommand LogoutCommand { get; }
 
         public DashboardViewModel()
         {
-            WelcomeMessage = $"Welcome, {App.CurrentUser?.FullName ?? "Firefighter"}!";
+            var user = App.CurrentUser;
+            WelcomeMessage = $"Welcome, {user?.FullName ?? "Firefighter"}!";
+            IsAdmin = user?.Role == "Admin";
+
+            // Initialize commands
             LogoutCommand = new Command(OnLogout);
-
-            GoToScannerCommand = new Command(async () =>
-                await Shell.Current.GoToAsync("ScannerPage"));
-
-            GoToTransferCommand = new Command(async () =>   // <-- NEW
-                await Shell.Current.GoToAsync("TransferPage"));
+            GoToScannerCommand = new Command(async () => await Shell.Current.GoToAsync("ScannerPage"));
+            GoToGenerateCommand = new Command(async () => await Shell.Current.GoToAsync("GenerateQRPage"));
+            GoToTransferCommand = new Command(async () => await Shell.Current.GoToAsync("TransferPage"));
+            GoToAddUserCommand = new Command(async () => await Shell.Current.GoToAsync("AddUserPage"));
+            GoToClearanceCommand = new Command(async () => await Shell.Current.GoToAsync("ClearancePage"));
+            ReportDamageCommand = new Command<EquipmentModel>(OnReportDamage);
 
             LoadEquipment();
         }
@@ -52,6 +69,17 @@ namespace Firetrack.ViewModels
             MyEquipment.Clear();
             foreach (var item in equipment)
                 MyEquipment.Add(item);
+        }
+
+        private async void OnReportDamage(EquipmentModel equipment)
+        {
+            if (equipment == null) return;
+
+            var navigationParams = new Dictionary<string, object>
+            {
+                { "equipment", equipment }
+            };
+            await Shell.Current.GoToAsync("ReportDamagePage", navigationParams);
         }
 
         private async void OnLogout()

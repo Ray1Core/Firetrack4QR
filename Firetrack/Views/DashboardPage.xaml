@@ -6,6 +6,8 @@
              Shell.TabBarIsVisible="True">
 
     <VerticalStackLayout Padding="20" Spacing="20">
+
+        <!-- Header -->
         <Label Text="Fire Track Dashboard"
                FontSize="24"
                FontAttributes="Bold"
@@ -15,16 +17,33 @@
                FontSize="18"
                HorizontalOptions="Center"/>
 
+        <Label Text="{Binding UserRole, StringFormat='Role: {0}'}"
+               FontSize="14"
+               TextColor="Gray"
+               HorizontalOptions="Center"/>
+
+        <!-- Equipment List -->
         <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="White" Padding="10" StrokeShape="RoundRectangle 10">
             <VerticalStackLayout>
                 <Label Text="📦 Your Assigned Equipment" FontAttributes="Bold"/>
                 <CollectionView ItemsSource="{Binding MyEquipment}" HeightRequest="200">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="*, Auto" Padding="5">
+                            <Grid ColumnDefinitions="*, Auto, Auto" Padding="5">
                                 <Label Text="{Binding Name}" Grid.Column="0" FontSize="14"/>
                                 <Label Text="{Binding Status}" Grid.Column="1" FontSize="12" 
-                               TextColor="{Binding Status, Converter={StaticResource StatusColorConverter}}"/>
+                                       TextColor="{Binding Status, Converter={StaticResource StatusColorConverter}}"/>
+                                <!-- Report Damage Button -->
+                                <Button Grid.Column="2" 
+                                        Text="⚠️ Report"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ReportDamageCommand}"
+                                        CommandParameter="{Binding .}"
+                                        BackgroundColor="#D32F2F"
+                                        TextColor="White"
+                                        FontSize="10"
+                                        CornerRadius="5"
+                                        Padding="5"
+                                        HeightRequest="30"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -32,6 +51,43 @@
             </VerticalStackLayout>
         </Border>
 
+        <!-- Common Buttons (visible to all) -->
+        <Button Text="📷 Scan QR"
+                Command="{Binding GoToScannerCommand}"
+                BackgroundColor="#4E6B94"
+                TextColor="White"
+                CornerRadius="10" />
+
+        <!-- Admin-Only Buttons (visible only if IsAdmin = true) -->
+        <Button Text="📱 Generate QR Sticker"
+                Command="{Binding GoToGenerateCommand}"
+                BackgroundColor="#6B4E94"
+                TextColor="White"
+                CornerRadius="10"
+                IsVisible="{Binding IsAdmin}" />
+
+        <Button Text="🔄 Transfer Equipment"
+                Command="{Binding GoToTransferCommand}"
+                BackgroundColor="#6B4E94"
+                TextColor="White"
+                CornerRadius="10"
+                IsVisible="{Binding IsAdmin}" />
+
+        <Button Text="👥 Manage Users"
+                Command="{Binding GoToAddUserCommand}"
+                BackgroundColor="#9C27B0"
+                TextColor="White"
+                CornerRadius="10"
+                IsVisible="{Binding IsAdmin}" />
+
+        <Button Text="📋 Clearance Audit"
+                Command="{Binding GoToClearanceCommand}"
+                BackgroundColor="#FF9800"
+                TextColor="White"
+                CornerRadius="10"
+                IsVisible="{Binding IsAdmin}" />
+
+        <!-- Logout Button (always visible) -->
         <Button Text="Logout"
                 Command="{Binding LogoutCommand}"
                 BackgroundColor="Gray"
@@ -39,17 +95,5 @@
                 CornerRadius="10"
                 HeightRequest="45"/>
 
-        <Button Text="📷 Scan QR"
-                Command="{Binding GoToScannerCommand}"
-                BackgroundColor="#4E6B94"
-                TextColor="White"
-                CornerRadius="10" />
-
-        <Button Text="🔄 Transfer Equipment"
-        Command="{Binding GoToTransferCommand}"
-        BackgroundColor="#6B4E94"
-        TextColor="White"
-        CornerRadius="10" />
-        
     </VerticalStackLayout>
 </ContentPage>
