@@ -1,6 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
+
+	<application android:allowBackup="true"
+	             android:icon="@mipmap/appicon"
+	             android:roundIcon="@mipmap/appicon_round"
+	             android:supportsRtl="true">
+	</application>
+
+	<!-- Network permissions (already present) -->
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
+
+	<!-- ========== ADD THESE PERMISSIONS ========== -->
+	<!-- Camera -->
+	<uses-permission android:name="android.permission.CAMERA" />
+
+	<!-- Storage (for Android 12 and lower) -->
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+	<!-- Storage (for Android 13+) -->
+	<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+	<!-- =========================================== -->
+
 </manifest>

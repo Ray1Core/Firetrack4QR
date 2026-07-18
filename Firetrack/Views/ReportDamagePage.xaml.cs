@@ -4,12 +4,22 @@ using Microsoft.Maui.Controls;
 
 namespace Firetrack.Views
 {
-    public partial class ReportDamagePage : ContentPage
+    public partial class ReportDamagePage : ContentPage, IQueryAttributable
     {
-        public ReportDamagePage(EquipmentModel equipment)
+        private EquipmentModel? _passedEquipment;
+
+        public ReportDamagePage()
         {
             InitializeComponent();
-            BindingContext = new ReportDamageViewModel(equipment);
+        }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            if (query.ContainsKey("equipment"))
+            {
+                _passedEquipment = query["equipment"] as EquipmentModel;
+                BindingContext = new ReportDamageViewModel(_passedEquipment!);
+            }
         }
     }
 }

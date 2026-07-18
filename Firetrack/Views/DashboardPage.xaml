@@ -58,7 +58,7 @@
                 TextColor="White"
                 CornerRadius="10" />
 
-        <!-- Admin-Only Buttons (visible only if IsAdmin = true) -->
+        <!-- Admin-Only Buttons -->
         <Button Text="📱 Generate QR Sticker"
                 Command="{Binding GoToGenerateCommand}"
                 BackgroundColor="#6B4E94"
@@ -87,7 +87,7 @@
                 CornerRadius="10"
                 IsVisible="{Binding IsAdmin}" />
 
-        <!-- Logout Button (always visible) -->
+        <!-- Logout -->
         <Button Text="Logout"
                 Command="{Binding LogoutCommand}"
                 BackgroundColor="Gray"
