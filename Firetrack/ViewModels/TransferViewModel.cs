@@ -89,24 +89,31 @@ namespace Firetrack.ViewModels
                 return;
             }
 
+            // Capture the officer before we clear it
+            var capturedOfficer = SelectedOfficer;
+            var capturedEquipment = equipment;
+
+            // Create transaction
             var transaction = new TransactionModel
             {
-                EquipmentQR = equipment.QRCode,
+                EquipmentQR = capturedEquipment.QRCode,
                 FromUser = App.CurrentUser?.Username ?? "admin",
-                ToUser = SelectedOfficer.Username,
+                ToUser = capturedOfficer.Username,
                 Timestamp = DateTime.Now,
                 Action = "Issue",
-                Remarks = $"Issued to {SelectedOfficer.FullName}"
+                Remarks = $"Issued to {capturedOfficer.FullName}"
             };
 
-            equipment.AssignedToUsername = SelectedOfficer.Username;
-            equipment.Status = "Issued";
-            equipment.LastUpdated = DateTime.Now;
+            // Update equipment
+            capturedEquipment.AssignedToUsername = capturedOfficer.Username;
+            capturedEquipment.Status = "Issued";
+            capturedEquipment.LastUpdated = DateTime.Now;
 
+            // Save to database
             await _db.SaveTransactionAsync(transaction);
-            await _db.SaveEquipmentAsync(equipment);
+            await _db.SaveEquipmentAsync(capturedEquipment);
 
-            StatusMessage = $"✅ Equipment '{equipment.Name}' issued to {SelectedOfficer.FullName}.";
+            StatusMessage = $"✅ Equipment '{capturedEquipment.Name}' issued to {capturedOfficer.FullName}.";
 
             // Clear fields
             SelectedEquipment = null;
@@ -115,6 +122,14 @@ namespace Firetrack.ViewModels
 
             // Refresh the list
             await LoadDataAsync();
+
+            // ========== NAVIGATE TO ICS PAGE ==========
+            var navParams = new Dictionary<string, object>
+            {
+                { "equipment", capturedEquipment },
+                { "officer", capturedOfficer }
+            };
+            await Shell.Current.GoToAsync("IcsPage", navParams);
         }
     }
 }

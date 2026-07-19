@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using ZXing.Net.Maui;
 using ZXing.Net.Maui.Controls;
+using Firetrack.Services;   // <-- make sure this using is present
 
 namespace Firetrack
 {
@@ -13,7 +14,7 @@ namespace Firetrack
                 .UseMauiApp<App>()
                 .ConfigureMauiHandlers(handlers =>
                 {
-                    // Manually register the CameraView handler
+                    // Manually register the CameraView handler (for QR scanner)
                     handlers.AddHandler(typeof(CameraView), typeof(CameraViewHandler));
                 })
                 .ConfigureFonts(fonts =>
@@ -21,6 +22,10 @@ namespace Firetrack
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+            // ========== ADD THIS SERVICE REGISTRATION ==========
+            builder.Services.AddSingleton<PdfGenerationService>();
+            // ====================================================
 
 #if DEBUG
             builder.Logging.AddDebug();
