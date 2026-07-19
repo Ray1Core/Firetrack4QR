@@ -1,20 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SQLite;
 
 namespace Firetrack.Models
 {
+    [Table("Transactions")]
     public class TransactionModel
     {
-        [SQLite.PrimaryKey, SQLite.AutoIncrement]
+        [PrimaryKey, AutoIncrement]
         public int TransactionId { get; set; }
+
+        [Indexed, NotNull]
         public string EquipmentQR { get; set; } = string.Empty;
+
+        [Indexed, NotNull]
         public string FromUser { get; set; } = string.Empty;
+
+        [Indexed, NotNull]
         public string ToUser { get; set; } = string.Empty;
+
+        [NotNull]
         public DateTime Timestamp { get; set; }
-        public string Action { get; set; } = string.Empty;   // Issue, Return, ReportDamage
+
+        [NotNull]
+        public string Action { get; set; } = string.Empty;
+
         public string? Remarks { get; set; }
     }
 }

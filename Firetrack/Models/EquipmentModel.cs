@@ -1,21 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SQLite;
 
 namespace Firetrack.Models
 {
+    [Table("Equipment")]
     public class EquipmentModel
     {
-        [SQLite.PrimaryKey, SQLite.AutoIncrement]
+        [PrimaryKey, AutoIncrement]
         public int EquipmentId { get; set; }
-        public string QRCode { get; set; } = string.Empty;   // unique QR identifier
-        public string Name { get; set; } = string.Empty;     // e.g. "Fire Hose 1"
-        public string Type { get; set; } = string.Empty;     // Hose, Nozzle, Tool
-        public string Status { get; set; } = "Available";    // Available, Issued, Damaged, InRepair
-        public string? AssignedToUsername { get; set; }      // username of current custodian
-        public string? PhotoPath { get; set; }               // for damage report
+
+        [Unique, Indexed, NotNull]
+        public string QRCode { get; set; } = string.Empty;
+
+        [NotNull]
+        public string Name { get; set; } = string.Empty;
+
+        [NotNull]
+        public string Type { get; set; } = string.Empty;
+
+        [NotNull]
+        public string Status { get; set; } = "Available";
+
+        [Indexed]
+        public string? AssignedToUsername { get; set; }
+
+        public string? PhotoPath { get; set; }
         public string? Remarks { get; set; }
         public DateTime? LastUpdated { get; set; }
     }

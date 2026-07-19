@@ -15,6 +15,11 @@ namespace Firetrack.Services
         public DatabaseService(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
+
+            // ========== ENABLE FOREIGN KEY CONSTRAINTS ==========
+            _database.ExecuteAsync("PRAGMA foreign_keys = ON;");
+            // ===================================================
+
             // Create tables
             _database.CreateTableAsync<EquipmentModel>().Wait();
             _database.CreateTableAsync<TransactionModel>().Wait();
@@ -48,7 +53,6 @@ namespace Firetrack.Services
         public Task<int> SaveUserAsync(UserModel user) =>
             _database.InsertOrReplaceAsync(user);
 
-        // ========== NEW METHODS ADDED FOR DUAL-SCAN ==========
         // ---------- Get All Users ----------
         public Task<List<UserModel>> GetUsersAsync() =>
             _database.Table<UserModel>().ToListAsync();
@@ -56,6 +60,5 @@ namespace Firetrack.Services
         // ---------- Get Equipment by QR Code ----------
         public Task<EquipmentModel?> GetEquipmentByQRAsync(string qrCode) =>
             _database.Table<EquipmentModel>().FirstOrDefaultAsync(e => e.QRCode == qrCode)!;
-        // ========== END OF NEW METHODS ==========
     }
 }
