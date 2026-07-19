@@ -4,44 +4,60 @@
              x:Class="Firetrack.Views.AddUserPage"
              Title="Add User">
 
-    <VerticalStackLayout Padding="20" Spacing="20">
-        <Label Text="Create New Account"
-               FontSize="24"
-               FontAttributes="Bold"
-               HorizontalOptions="Center" />
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <!-- Header -->
+            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="👤 Create New Account"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource PrimaryColor}"
+                       HorizontalOptions="Center" />
+                <Label Text="Fill in the details to add a new user."
+                       FontSize="14"
+                       TextColor="{StaticResource TextSecondaryColor}"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
 
-        <Entry Placeholder="Username"
-               Text="{Binding Username}" />
+            <!-- Form Card -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="16">
+                    <Entry Style="{StaticResource EntryStyle}"
+                           Placeholder="Username"
+                           Text="{Binding Username}" />
 
-        <Entry Placeholder="Password"
-               Text="{Binding Password}"
-               IsPassword="True" />
+                    <Entry Style="{StaticResource EntryStyle}"
+                           Placeholder="Password"
+                           IsPassword="True"
+                           Text="{Binding Password}" />
 
-        <Entry Placeholder="Full Name"
-               Text="{Binding FullName}" />
+                    <Entry Style="{StaticResource EntryStyle}"
+                           Placeholder="Full Name"
+                           Text="{Binding FullName}" />
 
-        <Picker Title="Select Role"
-                ItemsSource="{Binding Roles}"
-                SelectedItem="{Binding Role}" />
+                    <Picker Title="Select Role"
+                            ItemsSource="{Binding Roles}"
+                            SelectedItem="{Binding Role}"
+                            TextColor="{StaticResource TextPrimaryColor}"
+                            TitleColor="{StaticResource TextSecondaryColor}" />
 
-        <Label Text="{Binding StatusMessage}"
-               TextColor="Green"
-               HorizontalOptions="Center" />
+                    <Label Text="{Binding StatusMessage}"
+                           TextColor="{Binding StatusMessage, Converter={StaticResource StringToColorConverter}}"
+                           HorizontalOptions="Center"
+                           FontSize="14" />
 
-        <Button Text="Create Account"
-                Command="{Binding SaveUserCommand}"
-                BackgroundColor="#4CAF50"
-                TextColor="White"
-                CornerRadius="10"
-                HeightRequest="45" />
+                    <Button Text="Create Account"
+                            Style="{StaticResource SuccessButton}"
+                            Command="{Binding SaveUserCommand}" />
 
-        <Button Text="Cancel"
-                Command="{Binding CancelCommand}"
-                BackgroundColor="Gray"
-                TextColor="White"
-                CornerRadius="10" />
+                    <Button Text="Cancel"
+                            Style="{StaticResource SecondaryButton}"
+                            Command="{Binding CancelCommand}" />
 
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           Color="#4E6B94" />
-    </VerticalStackLayout>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       Color="{StaticResource PrimaryColor}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

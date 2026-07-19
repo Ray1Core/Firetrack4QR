@@ -4,59 +4,76 @@
              x:Class="Firetrack.Views.IcsPage"
              Title="Generate ICS">
 
-    <VerticalStackLayout Padding="20" Spacing="20">
-        <Label Text="Inventory Custodian Slip (ICS)"
-               FontSize="24"
-               FontAttributes="Bold"
-               HorizontalOptions="Center" />
-
-        <!-- Equipment Details -->
-        <Border Stroke="Gray" StrokeThickness="1" Padding="10" StrokeShape="RoundRectangle 10">
-            <VerticalStackLayout Spacing="8">
-                <Label Text="Equipment Details" FontAttributes="Bold" />
-                <Label Text="{Binding Equipment.Name, StringFormat='Name: {0}'}" />
-                <Label Text="{Binding Equipment.QRCode, StringFormat='QR Code: {0}'}" />
-                <Label Text="{Binding Equipment.Type, StringFormat='Type: {0}'}" />
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <!-- Header -->
+            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="📄 Inventory Custodian Slip"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource PrimaryColor}"
+                       HorizontalOptions="Center" />
+                <Label Text="Review the details and generate the official ICS document."
+                       FontSize="14"
+                       TextColor="{StaticResource TextSecondaryColor}"
+                       HorizontalOptions="Center" />
             </VerticalStackLayout>
-        </Border>
 
-        <!-- Custodian Details -->
-        <Border Stroke="Gray" StrokeThickness="1" Padding="10" StrokeShape="RoundRectangle 10">
-            <VerticalStackLayout Spacing="8">
-                <Label Text="Custodian Details" FontAttributes="Bold" />
-                <Label Text="{Binding Officer.FullName, StringFormat='Name: {0}'}" />
-                <Label Text="{Binding Officer.Username, StringFormat='ID: {0}'}" />
-                <Label Text="{Binding Officer.Role, StringFormat='Role: {0}'}" />
-            </VerticalStackLayout>
-        </Border>
+            <!-- Equipment Details -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Equipment Details"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           TextColor="{StaticResource PrimaryColor}" />
+                    <Label Text="{Binding Equipment.Name, StringFormat='Name: {0}'}" />
+                    <Label Text="{Binding Equipment.QRCode, StringFormat='QR Code: {0}'}" />
+                    <Label Text="{Binding Equipment.Type, StringFormat='Type: {0}'}" />
+                </VerticalStackLayout>
+            </Border>
 
-        <!-- Issuing Officer -->
-        <Border Stroke="Gray" StrokeThickness="1" Padding="10" StrokeShape="RoundRectangle 10">
-            <VerticalStackLayout Spacing="8">
-                <Label Text="Issuing Officer" FontAttributes="Bold" />
-                <Label Text="{Binding Issuer.FullName, StringFormat='Name: {0}'}" />
-                <Label Text="{Binding Issuer.Role, StringFormat='Position: {0}'}" />
-            </VerticalStackLayout>
-        </Border>
+            <!-- Custodian Details -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Custodian Details"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           TextColor="{StaticResource PrimaryColor}" />
+                    <Label Text="{Binding Officer.FullName, StringFormat='Name: {0}'}" />
+                    <Label Text="{Binding Officer.Username, StringFormat='ID: {0}'}" />
+                    <Label Text="{Binding Officer.Role, StringFormat='Role: {0}'}" />
+                </VerticalStackLayout>
+            </Border>
 
-        <Label Text="{Binding StatusMessage}"
-               TextColor="Green"
-               HorizontalOptions="Center" />
+            <!-- Issuing Officer -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Issuing Officer"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           TextColor="{StaticResource PrimaryColor}" />
+                    <Label Text="{Binding Issuer.FullName, StringFormat='Name: {0}'}" />
+                    <Label Text="{Binding Issuer.Role, StringFormat='Position: {0}'}" />
+                </VerticalStackLayout>
+            </Border>
 
-        <Button Text="📄 Generate &amp; Download ICS"
-                Command="{Binding GenerateIcsCommand}"
-                BackgroundColor="#4E6B94"
-                TextColor="White"
-                CornerRadius="10"
-                HeightRequest="45" />
+            <!-- Status Message -->
+            <Label Text="{Binding StatusMessage}"
+                   TextColor="{Binding StatusMessage, Converter={StaticResource StringToColorConverter}}"
+                   HorizontalOptions="Center"
+                   FontSize="14" />
 
-        <Button Text="Back"
-                Command="{Binding GoBackCommand}"
-                BackgroundColor="Gray"
-                TextColor="White"
-                CornerRadius="10" />
+            <!-- Buttons -->
+            <Button Text="📄 Generate &amp; Download ICS"
+                    Style="{StaticResource SuccessButton}"
+                    Command="{Binding GenerateIcsCommand}" />
 
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           Color="#4E6B94" />
-    </VerticalStackLayout>
+            <Button Text="Back"
+                    Style="{StaticResource SecondaryButton}"
+                    Command="{Binding GoBackCommand}" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               Color="{StaticResource PrimaryColor}" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -6,15 +6,26 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
-            <Label Text="Report Damaged Equipment"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+            <!-- Header -->
+            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                <Label Text="⚠️ Report Damaged Equipment"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource PrimaryColor}"
+                       HorizontalOptions="Center" />
+                <Label Text="Provide details and attach a photo."
+                       FontSize="14"
+                       TextColor="{StaticResource TextSecondaryColor}"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
 
-            <!-- Equipment details (use Border) -->
-            <Border Stroke="Gray" StrokeThickness="1" Padding="10" StrokeShape="RoundRectangle 10">
+            <!-- Equipment Details Card -->
+            <Border Style="{StaticResource CardStyle}">
                 <VerticalStackLayout Spacing="5">
-                    <Label Text="Equipment Details" FontAttributes="Bold" />
+                    <Label Text="Equipment Details"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           TextColor="{StaticResource PrimaryColor}" />
                     <Label Text="{Binding Equipment.Name, StringFormat='Name: {0}'}" />
                     <Label Text="{Binding Equipment.QRCode, StringFormat='QR Code: {0}'}" />
                     <Label Text="{Binding Equipment.Type, StringFormat='Type: {0}'}" />
@@ -22,62 +33,63 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Photo section (use Border) -->
-            <Border Stroke="Gray" StrokeThickness="1" Padding="10" StrokeShape="RoundRectangle 10">
+            <!-- Photo Section Card -->
+            <Border Style="{StaticResource CardStyle}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Damage Photo" FontAttributes="Bold" />
+                    <Label Text="Damage Photo"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           TextColor="{StaticResource PrimaryColor}" />
 
-                    <Border HeightRequest="200" 
+                    <Border HeightRequest="200"
                             BackgroundColor="#F0F0F0"
                             Padding="0"
-                            HorizontalOptions="Fill">
-                        <Image Source="{Binding PhotoPreview}" 
+                            HorizontalOptions="Fill"
+                            StrokeThickness="0">
+                        <Image Source="{Binding PhotoPreview}"
                                Aspect="AspectFit"
-                               HorizontalOptions="Center">
-                            <!-- Remove trigger or add placeholder image -->
-                        </Image>
+                               HorizontalOptions="Center" />
                     </Border>
 
                     <Button Text="📷 Select Photo"
                             Command="{Binding PickPhotoCommand}"
-                            BackgroundColor="#4E6B94"
-                            TextColor="White"
-                            CornerRadius="10" />
+                            Style="{StaticResource PrimaryButton}" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Remarks (use Border) -->
-            <Border Stroke="Gray" StrokeThickness="1" Padding="10" StrokeShape="RoundRectangle 10">
+            <!-- Remarks Card -->
+            <Border Style="{StaticResource CardStyle}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Remarks" FontAttributes="Bold" />
+                    <Label Text="Remarks"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           TextColor="{StaticResource PrimaryColor}" />
                     <Editor Placeholder="Describe the damage..."
                             Text="{Binding Remarks}"
-                            HeightRequest="100" />
+                            HeightRequest="100"
+                            BackgroundColor="White"
+                            TextColor="{StaticResource TextPrimaryColor}"
+                            PlaceholderColor="{StaticResource TextSecondaryColor}" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Status message -->
+            <!-- Status Message -->
             <Label Text="{Binding StatusMessage}"
-                   TextColor="Green"
-                   HorizontalOptions="Center" />
+                   TextColor="{Binding StatusMessage, Converter={StaticResource StringToColorConverter}}"
+                   HorizontalOptions="Center"
+                   FontSize="14" />
 
             <!-- Buttons -->
             <Button Text="Submit Report"
-                    Command="{Binding SubmitReportCommand}"
-                    BackgroundColor="#D32F2F"
-                    TextColor="White"
-                    CornerRadius="10"
-                    HeightRequest="45" />
+                    Style="{StaticResource DangerButton}"
+                    Command="{Binding SubmitReportCommand}" />
 
             <Button Text="Back"
-                    Command="{Binding GoBackCommand}"
-                    BackgroundColor="Gray"
-                    TextColor="White"
-                    CornerRadius="10" />
+                    Style="{StaticResource SecondaryButton}"
+                    Command="{Binding GoBackCommand}" />
 
-            <!-- Activity indicator -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               Color="#4E6B94" />
+                               Color="{StaticResource PrimaryColor}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

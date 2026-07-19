@@ -5,95 +5,104 @@
              Title="Dashboard"
              Shell.TabBarIsVisible="True">
 
-    <VerticalStackLayout Padding="20" Spacing="20">
-
-        <!-- Header -->
-        <Label Text="Fire Track Dashboard"
-               FontSize="24"
-               FontAttributes="Bold"
-               HorizontalOptions="Center"/>
-
-        <Label Text="{Binding WelcomeMessage}"
-               FontSize="18"
-               HorizontalOptions="Center"/>
-
-        <Label Text="{Binding UserRole, StringFormat='Role: {0}'}"
-               FontSize="14"
-               TextColor="Gray"
-               HorizontalOptions="Center"/>
-
-        <!-- Equipment List -->
-        <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="White" Padding="10" StrokeShape="RoundRectangle 10">
-            <VerticalStackLayout>
-                <Label Text="📦 Your Assigned Equipment" FontAttributes="Bold"/>
-                <CollectionView ItemsSource="{Binding MyEquipment}" HeightRequest="200">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid ColumnDefinitions="*, Auto, Auto" Padding="5">
-                                <Label Text="{Binding Name}" Grid.Column="0" FontSize="14"/>
-                                <Label Text="{Binding Status}" Grid.Column="1" FontSize="12" 
-                                       TextColor="{Binding Status, Converter={StaticResource StatusColorConverter}}"/>
-                                <!-- Report Damage Button -->
-                                <Button Grid.Column="2" 
-                                        Text="⚠️ Report"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ReportDamageCommand}"
-                                        CommandParameter="{Binding .}"
-                                        BackgroundColor="#D32F2F"
-                                        TextColor="White"
-                                        FontSize="10"
-                                        CornerRadius="5"
-                                        Padding="5"
-                                        HeightRequest="30"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <!-- Header -->
+            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                <Label Text="🔥 Fire Track"
+                       FontSize="32"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource PrimaryColor}"
+                       HorizontalOptions="Center" />
+                <Label Text="{Binding WelcomeMessage}"
+                       FontSize="18"
+                       TextColor="{StaticResource TextPrimaryColor}"
+                       HorizontalOptions="Center" />
+                <Label Text="{Binding UserRole, StringFormat='Role: {0}'}"
+                       FontSize="14"
+                       TextColor="{StaticResource TextSecondaryColor}"
+                       HorizontalOptions="Center" />
             </VerticalStackLayout>
-        </Border>
 
-        <!-- Common Buttons (visible to all) -->
-        <Button Text="📷 Scan QR"
-                Command="{Binding GoToScannerCommand}"
-                BackgroundColor="#4E6B94"
-                TextColor="White"
-                CornerRadius="10" />
+            <!-- Equipment List Card -->
+            <Border Style="{StaticResource CardStyle}" Padding="0">
+                <VerticalStackLayout>
+                    <Label Text="📦 Your Assigned Equipment"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           TextColor="{StaticResource PrimaryColor}"
+                           Margin="15,10,15,5" />
+                    <CollectionView ItemsSource="{Binding MyEquipment}" HeightRequest="200">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*, Auto, Auto" Padding="10,6">
+                                    <Label Text="{Binding Name}"
+                                           Grid.Column="0"
+                                           FontSize="14"
+                                           TextColor="{StaticResource TextPrimaryColor}" />
+                                    <Label Text="{Binding Status}"
+                                           Grid.Column="1"
+                                           FontSize="12"
+                                           Padding="6,2"
+                                           Margin="5,0"
+                                           HorizontalTextAlignment="Center"
+                                           TextColor="White"
+                                           BackgroundColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}" />
+                                    <Button Grid.Column="2"
+                                            Text="⚠️ Report"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ReportDamageCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{StaticResource DangerColor}"
+                                            TextColor="White"
+                                            FontSize="11"
+                                            CornerRadius="6"
+                                            Padding="8,4"
+                                            HeightRequest="30" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
 
-        <!-- Admin-Only Buttons -->
-        <Button Text="📱 Generate QR Sticker"
-                Command="{Binding GoToGenerateCommand}"
-                BackgroundColor="#6B4E94"
-                TextColor="White"
-                CornerRadius="10"
-                IsVisible="{Binding IsAdmin}" />
+            <!-- Action Buttons Grid -->
+            <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto, Auto, Auto" ColumnSpacing="12" RowSpacing="12">
+                <!-- Row 1: Scan QR (common) -->
+                <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                        Text="📷 Scan QR"
+                        Command="{Binding GoToScannerCommand}"
+                        Style="{StaticResource PrimaryButton}" />
 
-        <Button Text="🔄 Transfer Equipment"
-                Command="{Binding GoToTransferCommand}"
-                BackgroundColor="#6B4E94"
-                TextColor="White"
-                CornerRadius="10"
-                IsVisible="{Binding IsAdmin}" />
+                <!-- Row 2: Admin Only -->
+                <Button Grid.Row="1" Grid.Column="0"
+                        Text="📱 Generate QR"
+                        Command="{Binding GoToGenerateCommand}"
+                        Style="{StaticResource PrimaryButton}"
+                        IsVisible="{Binding IsAdmin}" />
+                <Button Grid.Row="1" Grid.Column="1"
+                        Text="🔄 Transfer"
+                        Command="{Binding GoToTransferCommand}"
+                        Style="{StaticResource PrimaryButton}"
+                        IsVisible="{Binding IsAdmin}" />
 
-        <Button Text="👥 Manage Users"
-                Command="{Binding GoToAddUserCommand}"
-                BackgroundColor="#9C27B0"
-                TextColor="White"
-                CornerRadius="10"
-                IsVisible="{Binding IsAdmin}" />
+                <!-- Row 3: Admin Only -->
+                <Button Grid.Row="2" Grid.Column="0"
+                        Text="👥 Manage Users"
+                        Command="{Binding GoToAddUserCommand}"
+                        Style="{StaticResource PrimaryButton}"
+                        IsVisible="{Binding IsAdmin}" />
+                <Button Grid.Row="2" Grid.Column="1"
+                        Text="📋 Clearance"
+                        Command="{Binding GoToClearanceCommand}"
+                        Style="{StaticResource PrimaryButton}"
+                        IsVisible="{Binding IsAdmin}" />
 
-        <Button Text="📋 Clearance Audit"
-                Command="{Binding GoToClearanceCommand}"
-                BackgroundColor="#FF9800"
-                TextColor="White"
-                CornerRadius="10"
-                IsVisible="{Binding IsAdmin}" />
-
-        <!-- Logout -->
-        <Button Text="Logout"
-                Command="{Binding LogoutCommand}"
-                BackgroundColor="Gray"
-                TextColor="White"
-                CornerRadius="10"
-                HeightRequest="45"/>
-
-    </VerticalStackLayout>
+                <!-- Row 4: Logout (common) -->
+                <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                        Text="🚪 Logout"
+                        Command="{Binding LogoutCommand}"
+                        Style="{StaticResource DangerButton}" />
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
