@@ -8,7 +8,7 @@ namespace Firetrack.ViewModels
 {
     public class TransferViewModel : ViewModelBase
     {
-        private readonly DatabaseService _db;
+        private readonly DatabaseService? _db;
         private UserModel? _selectedOfficer;
         private EquipmentModel? _selectedEquipment;
         private string _manualEquipmentQR = string.Empty;
@@ -46,6 +46,15 @@ namespace Firetrack.ViewModels
 
         public TransferViewModel()
         {
+            // ===== ADMIN-ONLY CHECK =====
+            if (App.CurrentUser?.Role != "Admin")
+            {
+                StatusMessage = "Access denied. Only Admin can transfer equipment.";
+                TransferCommand = new Command(() => { });
+                GoBackCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
+                return;
+            }
+
             _db = App.Database!;
             TransferCommand = new Command(OnTransfer);
             GoBackCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
@@ -54,6 +63,8 @@ namespace Firetrack.ViewModels
 
         private async Task LoadDataAsync()
         {
+            if (_db == null) return;
+
             var userList = await _db.GetUsersAsync();
             Users.Clear();
             foreach (var u in userList)
@@ -67,6 +78,12 @@ namespace Firetrack.ViewModels
 
         private async void OnTransfer()
         {
+            if (_db == null)
+            {
+                StatusMessage = "Database not available.";
+                return;
+            }
+
             if (SelectedOfficer == null)
             {
                 StatusMessage = "Please select the receiving officer.";
@@ -89,11 +106,9 @@ namespace Firetrack.ViewModels
                 return;
             }
 
-            // Capture the officer before we clear it
             var capturedOfficer = SelectedOfficer;
             var capturedEquipment = equipment;
 
-            // Create transaction
             var transaction = new TransactionModel
             {
                 EquipmentQR = capturedEquipment.QRCode,
@@ -104,26 +119,21 @@ namespace Firetrack.ViewModels
                 Remarks = $"Issued to {capturedOfficer.FullName}"
             };
 
-            // Update equipment
             capturedEquipment.AssignedToUsername = capturedOfficer.Username;
             capturedEquipment.Status = "Issued";
             capturedEquipment.LastUpdated = DateTime.Now;
 
-            // Save to database
             await _db.SaveTransactionAsync(transaction);
             await _db.SaveEquipmentAsync(capturedEquipment);
 
             StatusMessage = $"✅ Equipment '{capturedEquipment.Name}' issued to {capturedOfficer.FullName}.";
 
-            // Clear fields
             SelectedEquipment = null;
             ManualEquipmentQR = string.Empty;
             SelectedOfficer = null;
 
-            // Refresh the list
             await LoadDataAsync();
 
-            // ========== NAVIGATE TO ICS PAGE ==========
             var navParams = new Dictionary<string, object>
             {
                 { "equipment", capturedEquipment },

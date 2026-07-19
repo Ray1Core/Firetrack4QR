@@ -2,11 +2,47 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Firetrack.Views.ScannerPage"
-             Title="ScannerPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="Scan QR Code">
+
+    <Grid>
+        <!-- Show a disabled message instead of the camera -->
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+            <Label Text="📷 QR Scanner"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+            <Label Text="Scanner is currently disabled."
+                   FontSize="18"
+                   TextColor="Gray"
+                   HorizontalOptions="Center" />
+            <Label Text="We are working on a stable scanning library."
+                   FontSize="14"
+                   TextColor="Gray"
+                   HorizontalOptions="Center" />
+            <Button Text="Back to Dashboard"
+                    Command="{Binding GoBackCommand}"
+                    BackgroundColor="Gray"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="45"
+                    WidthRequest="200" />
+        </VerticalStackLayout>
+
+        <!-- The camera view is hidden for now -->
+        <!--
+        <Grid>
+            <zxing:CameraView x:Name="cameraView"
+                              IsTorchOn="False"
+                              BarcodeDetected="OnBarcodeDetected"
+                              IsEnabled="{Binding IsScanning}" />
+            <VerticalStackLayout VerticalOptions="End" HorizontalOptions="Center" Padding="20">
+                <Frame BackgroundColor="#88000000" CornerRadius="15" Padding="15">
+                    <Label Text="Align QR code within the frame"
+                           TextColor="White"
+                           FontSize="16" />
+                </Frame>
+            </VerticalStackLayout>
+        </Grid>
+        -->
+    </Grid>
 </ContentPage>

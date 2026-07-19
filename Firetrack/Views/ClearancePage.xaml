@@ -2,11 +2,70 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Firetrack.Views.ClearancePage"
-             Title="ClearancePage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+             Title="Clearance Audit">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Label Text="Clearance Audit List"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <Label Text="Select an officer to view their assigned equipment and process returns."
+               FontSize="14"
+               HorizontalOptions="Center" />
+
+        <Picker Title="Select Officer"
+                ItemsSource="{Binding Officers}"
+                ItemDisplayBinding="{Binding FullName}"
+                SelectedItem="{Binding SelectedOfficer}" />
+
+        <Border Stroke="Gray" StrokeThickness="1" Padding="10" StrokeShape="RoundRectangle 10">
+            <VerticalStackLayout>
+                <Label Text="Assigned Equipment" FontAttributes="Bold" />
+                <CollectionView ItemsSource="{Binding AssignedEquipment}"
+                                HeightRequest="250"
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SelectedEquipment}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*, Auto, Auto" Padding="5">
+                                <Label Text="{Binding Name}" Grid.Column="0" FontSize="14" />
+                                <Label Text="{Binding Status}" Grid.Column="1" FontSize="12" 
+                                       TextColor="{Binding Status, Converter={StaticResource StatusColorConverter}}" />
+                                <Label Grid.Column="2" 
+                                       Text="{Binding AssignedToUsername, StringFormat='({0})'}" 
+                                       FontSize="10" TextColor="Gray" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </Border>
+
+        <Label Text="{Binding StatusMessage}"
+               TextColor="Green"
+               HorizontalOptions="Center" />
+
+        <Button Text="✅ Mark Selected as Returned"
+                Command="{Binding MarkReturnedCommand}"
+                BackgroundColor="#4CAF50"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="45" />
+
+        <Button Text="🔄 Refresh"
+                Command="{Binding RefreshCommand}"
+                BackgroundColor="#2196F3"
+                TextColor="White"
+                CornerRadius="10" />
+
+        <Button Text="Back"
+                Command="{Binding GoBackCommand}"
+                BackgroundColor="Gray"
+                TextColor="White"
+                CornerRadius="10" />
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color="#4E6B94" />
     </VerticalStackLayout>
 </ContentPage>
