@@ -1,152 +1,224 @@
-# 🔥 FireTrack – QR‑Based Inventory & Asset Accountability System
+# 🔥 Firetrack – QR-Based Inventory & Asset Accountability System
 
-[![.NET MAUI](https://img.shields.io/badge/.NET%20MAUI-9.0-blueviolet)](https://dotnet.microsoft.com/apps/maui)
-[![SQLite](https://img.shields.io/badge/SQLite-3-blue)](https://www.sqlite.org/)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Platforms](https://img.shields.io/badge/Platform-Android%20%7C%20Windows-lightgrey)]()
+**Firetrack** is a cross‑platform mobile application built with **.NET MAUI** that modernizes equipment tracking for the **Bureau of Fire Protection – Cebu City Station**. It replaces manual logbooks with a digital, QR‑driven system that ensures accountability, transparency, and ease of use for firefighters and logistics officers.
 
-**FireTrack** is a cross‑platform mobile application built with **.NET MAUI** to modernise equipment tracking for the **Bureau of Fire Protection – Cebu City Station**. It replaces manual logbooks with a digital, QR‑driven system that ensures **chain of custody**, **condition‑based disposal**, and **automated clearance** for retiring officers.
+![.NET MAUI](https://img.shields.io/badge/.NET%20MAUI-8.0-blueviolet)  
+![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Windows-lightgrey)  
+![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
 
 ## 📖 Table of Contents
 
-- [Overview](#-overview)
 - [Features](#-features)
-- [Technologies](#-technologies)
-- [Architecture](#-architecture)
-- [Setup & Installation](#-setup--installation)
+- [Technologies Used](#-technologies-used)
+- [Prerequisites](#-prerequisites)
+- [Installation & Setup](#-installation--setup)
 - [Running the App](#-running-the-app)
-- [Screenshots](#-screenshots)
+- [Configuration](#-configuration)
 - [Usage Guide](#-usage-guide)
+- [Project Structure](#-project-structure)
 - [Contributing](#-contributing)
 - [License](#-license)
-- [Acknowledgements](#-acknowledgements)
-
----
-
-## 📋 Overview
-
-FireTrack was developed as a capstone project for the **Bachelor of Science in Information Technology** at Asian College of Technology – Cebu. It addresses a real‑world challenge at the Cebu City Fire Station: the lack of unique identifiers on common equipment (hoses, nozzles, tools) leads to undocumented transfers, lost items, and financial liability for retiring officers.
-
-The system introduces:
-
-- **QR stickers** on every piece of gear.
-- A **dual‑scan handshake** to record official transfers.
-- **Photo‑based damage reporting** with automated notifications.
-- **PDF generation** of Inventory Custodian Slips (ICS).
-- An **admin dashboard** for user management, clearance audits, and reporting.
+- [Acknowledgments](#-acknowledgments)
 
 ---
 
 ## ✨ Features
 
-### 🔐 Authentication & Roles
-- Secure login with **BCrypt password hashing**.
-- Two roles: **Admin** (Chief/Supply Officer) and **Personnel** (Fire Officers).
-- Role‑based access control – sensitive features are hidden from non‑admin users.
-
-### 📦 Digital Locker (Dashboard)
-- Each firefighter sees a personalised list of equipment assigned to them.
-- Quick **Report Damage** button on each item.
-
-### 📷 QR Generation & Scanning *(currently disabled – awaiting stable library)*
-- Generate unique QR codes for every new equipment.
-- Scan QR codes to instantly view equipment details and history.
-
-### 🔄 Dual‑Scan Handshake (Transfer)
-- Admin selects a receiving officer and identifies equipment (via picker or manual QR).
-- A `Transaction` record is created, and the equipment status updates to `Issued`.
-- After transfer, the app automatically opens the **ICS PDF generation** page.
-
-### 📄 Automated ICS PDF Generation
-- Generates a professionally formatted Inventory Custodian Slip (BFP‑style).
-- Pre‑filled with equipment details, custodian info, issuing officer, and date.
-- PDF is saved locally and opened automatically.
-
-### 📸 Damage Reporting
-- Personnel can report damaged equipment with **photo evidence**.
-- Photos are stored locally and associated with the equipment.
-- A `Transaction` of type `ReportDamage` is created.
-- Admin receives immediate visual proof.
-
-### 🧹 Clearance Audit (Admin‑only)
-- Admin selects a retiring officer and sees all equipment currently assigned to them.
-- Each item can be marked as **Returned**, which updates its status and creates a `Return` transaction.
-- Simplifies the clearance process and eliminates manual reconciliation.
-
-### 👤 User Management (Admin‑only)
-- Admin can create new user accounts (Personnel or Admin).
-- Usernames are unique; passwords are hashed before storage.
+| Feature | Description |
+|---------|-------------|
+| **🔐 Login & Role Management** | Secure login with password hashing (BCrypt). Supports two roles: **Admin** and **Personnel**. |
+| **📦 Digital Locker (Dashboard)** | Every firefighter sees a personal list of equipment currently assigned to them. |
+| **📱 QR Code Generation** | Admin can generate unique QR stickers for each equipment item (disabled in current build – placeholder UI). |
+| **📷 QR Code Scanning** | Scan equipment QR codes to instantly retrieve details (disabled in current build – placeholder UI). |
+| **🔄 Dual‑Scan Handshake (Transfer)** | Admin scans/selects an officer and an equipment to transfer accountability. Creates an immutable transaction record. |
+| **⚠️ Damage Reporting** | Personnel can report damaged equipment by taking/selecting a photo and adding remarks. The equipment status is updated, and a transaction is logged. |
+| **📄 Automated ICS PDF Generation** | After a transfer, the system generates a pre‑filled **Inventory Custodian Slip (ICS)** in PDF format, ready for wet‑ink signature. |
+| **📋 Clearance Audit** | Admin can view all equipment assigned to any officer and mark items as returned, creating a complete clearance trail. |
+| **👥 User Management** | Admin can create new user accounts (Personnel or Admin) directly from the app. |
+| **🔒 Role‑Based Access Control** | Sensitive features (Transfer, Manage Users, Clearance, Generate QR) are visible only to Admin. |
+| **📊 Local SQLite Database** | All data (users, equipment, transactions) is stored locally with foreign‑key enforcement and indexes for performance. |
 
 ---
 
-## 🛠️ Technologies
+## 🛠️ Technologies Used
 
-| Component | Technology |
-|-----------|------------|
-| **Framework** | .NET MAUI 9.0 (cross‑platform) |
-| **Language** | C# |
-| **Architecture** | MVVM (Model‑View‑ViewModel) |
-| **Database** | SQLite (local) – with foreign keys, indexes, unique constraints |
-| **PDF Generation** | PdfSharp.Maui |
-| **QR Code Support** | ZXing.Net.Maui (currently disabled for stability) |
-| **Password Hashing** | BCrypt.Net‑Next |
-| **UI** | XAML + custom styles |
-| **Version Control** | Git + GitHub |
+- **.NET MAUI** – Cross‑platform UI framework (.NET 8)
+- **SQLite** – Local database via `sqlite-net-pcl`
+- **MVVM** – Model‑View‑ViewModel pattern with `INotifyPropertyChanged`
+- **BCrypt.Net-Next** – Password hashing
+- **PdfSharp.Maui** – PDF generation for ICS forms
+- **MediaPicker** – Photo selection for damage reports
+- **ZXing.Net.Maui** – QR scanning/generation (disabled for now)
+- **CommunityToolkit.Mvvm** – Optional (not used; custom base ViewModel)
 
 ---
 
-## 🧩 Architecture
+## 🧰 Prerequisites
 
-FireTrack follows the **MVVM** pattern, ensuring clear separation of concerns:
-
-- **Models** – Data entities (`UserModel`, `EquipmentModel`, `TransactionModel`).
-- **ViewModels** – Business logic, commands, and data binding.
-- **Views** – XAML pages with minimal code‑behind.
-
-The **DatabaseService** handles all CRUD operations and enforces foreign key constraints. Navigation is managed via **Shell routing**.
+- **Visual Studio 2022** (v17.8 or later) with the **.NET MAUI workload** installed.
+- **.NET 8 SDK** (included with Visual Studio).
+- **Android SDK** (for Android deployment) – or simply run on Windows.
+- **Git** (optional, for cloning the repository).
 
 ---
 
-## 💻 Setup & Installation
+## 📥 Installation & Setup
 
-### Prerequisites
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) with **.NET MAUI** workload installed.
-- [Android SDK](https://developer.android.com/studio) (if targeting Android).
-- Windows 10/11 (for Windows target).
+### 1. Clone the repository
 
-### Steps
+```bash
+git clone https://github.com/your-username/Firetrack.git
+cd Firetrack
+2. Open the solution
+Open Firetrack.sln in Visual Studio.
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/Firetrack.git
-   cd Firetrack
-Open the solution
+3. Restore NuGet packages
+All required packages will be restored automatically on build. If not, open Package Manager Console and run:
 
-Double‑click Firetrack.sln in Visual Studio.
-
-Restore NuGet packages
-
-Right‑click the solution → Restore NuGet Packages.
-
-Set the startup project
-
-Right‑click Firetrack → Set as Startup Project.
-
-Build the solution
-
-Press Ctrl+Shift+B or go to Build → Build Solution.
+powershell
+dotnet restore
+4. Build the solution
+Press Ctrl+Shift+B or select Build > Build Solution.
 
 🚀 Running the App
-Select a target platform (Android emulator or Windows Machine) from the toolbar.
+On Windows
+Select Windows Machine from the debug target dropdown.
 
-Press F5 to debug or Ctrl+F5 to run without debugging.
+Press F5 to start debugging.
 
-Default credentials (seeded automatically):
+On Android
+Open Android Device Manager and create/start an emulator (e.g., Pixel 5, API 33).
 
-Admin: admin / admin123
+Select the emulator from the debug target.
 
-Personnel: user / user123
+Press F5 to deploy and debug.
 
-💡 The app automatically creates these users and sample equipment on first launch.
+Note: The QR scanner and generator are currently disabled. They will show placeholder messages until a stable library is re‑integrated.
+
+⚙️ Configuration
+Database
+The SQLite database is created automatically at first launch.
+
+File location:
+{AppDataDirectory}/firetrack.db3
+(e.g., C:\Users\[User]\AppData\Local\Firetrack\firetrack.db3)
+
+Seed Data
+The app seeds default users and sample equipment on first run:
+
+Username	Password	Role
+admin	admin123	Admin
+user	user123	Personnel
+Passwords are hashed using BCrypt – they are stored securely even in the prototype.
+
+📖 Usage Guide
+Login
+Use the default credentials above or create your own via Manage Users (Admin only).
+
+After login, you are redirected to the Dashboard.
+
+Dashboard (Digital Locker)
+Shows all equipment currently assigned to you.
+
+Personnel can report damage on any item by clicking the ⚠️ Report button.
+
+Admin has additional buttons:
+
+Generate QR – (disabled) generates QR codes.
+
+Transfer – transfers equipment to another officer.
+
+Manage Users – creates new accounts.
+
+Clearance – audits equipment for retiring officers.
+
+Transferring Equipment (Admin only)
+Go to Transfer Equipment.
+
+Select the receiving officer.
+
+Select the equipment (or type its QR code manually).
+
+Click Transfer Equipment.
+
+The equipment status updates to Issued, a transaction is logged, and you are redirected to the ICS generation page.
+
+Click Generate & Download ICS to produce a PDF.
+
+Reporting Damage (Personnel/Admin)
+On the Dashboard, find the equipment and click ⚠️ Report.
+
+Fill in the damage description and attach a photo.
+
+Click Submit Report.
+
+The equipment status changes to Damaged, and a transaction is created.
+
+Clearance Audit (Admin only)
+Go to Clearance Audit.
+
+Select an officer from the picker.
+
+View all equipment assigned to them.
+
+Select an item and click Mark Selected as Returned.
+
+The equipment becomes Available and a Return transaction is logged.
+
+📂 Project Structure
+text
+Firetrack/
+├── Models/               # Data entities (Equipment, Transaction, User)
+├── ViewModels/           # Business logic (Login, Dashboard, Transfer, etc.)
+├── Views/                # XAML pages + code-behind
+├── Services/             # DatabaseService, PdfGenerationService
+├── Converters/           # Value converters for UI (Status → Color, etc.)
+├── Platforms/            # Platform-specific files (Android, Windows, etc.)
+├── Resources/            # App icons, fonts, styles
+├── App.xaml              # Application resources
+├── AppShell.xaml         # Shell navigation routes
+└── MauiProgram.cs        # App builder and dependency injection
+🤝 Contributing
+Contributions are welcome! Please follow these steps:
+
+Fork the repository.
+
+Create a feature branch (git checkout -b feature/YourFeature).
+
+Commit your changes (git commit -m 'Add some feature').
+
+Push to the branch (git push origin feature/YourFeature).
+
+Open a Pull Request.
+
+📄 License
+Distributed under the MIT License. See LICENSE for more information.
+
+🙏 Acknowledgments
+Bureau of Fire Protection – Cebu City Station for providing the use case and requirements.
+
+Asian College of Technology for academic support.
+
+The .NET MAUI community for excellent libraries and tooling.
+
+📧 Contact
+Project Link: https://github.com/your-username/Firetrack
+Team: MECHIE SASARITA, RAFFY MANZANARES, RAYMUND J. RODRIGUEZ JR., JOSH GABRIEL DELA CUESTA
+Adviser: ENRIQUE T. MANAL III
+
+Made with ❤️ for the firefighters of Cebu City.
+
+text
+
+---
+
+## ✅ Next Steps
+
+1. **Create** a new file in your project root called `README.md`.
+2. **Copy and paste** the content above into it.
+3. **Replace** `your-username` with your actual GitHub username in the repository link.
+4. **Commit and push** to GitHub.
+
+The README is now fully populated with all the features, setup instructions, and usage details of your Firetrack project. It will look professional on your GitHub repository.
